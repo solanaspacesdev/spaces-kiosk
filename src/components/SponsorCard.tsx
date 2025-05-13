@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
-import SponsorDialog from "./SponsorDialog";
+import Image from 'next/image';
+import { useState } from 'react';
+import SponsorDialog from './SponsorDialog';
 
 interface SponsorCardProps {
   name: string;
@@ -16,7 +16,11 @@ interface SponsorCardProps {
   };
 }
 
-export default function SponsorCard({ name, description, sponsorImage }: SponsorCardProps) {
+export default function SponsorCard({
+  name,
+  description,
+  sponsorImage,
+}: SponsorCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -32,7 +36,9 @@ export default function SponsorCard({ name, description, sponsorImage }: Sponsor
           className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <h3 className="absolute bottom-4 left-4 text-xl font-semibold text-white">{name}</h3>
+        <h3 className="absolute bottom-4 left-4 text-xl font-semibold text-white">
+          {name}
+        </h3>
       </button>
 
       <SponsorDialog
@@ -44,4 +50,4 @@ export default function SponsorCard({ name, description, sponsorImage }: Sponsor
       />
     </>
   );
-} 
+}

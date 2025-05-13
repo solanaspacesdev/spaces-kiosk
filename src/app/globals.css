@@ -1,12 +1,16 @@
-@import "tailwindcss";
-
+@import 'tailwindcss';
 
 body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   overflow: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   font-weight: 600;
   color: #fff;
@@ -45,4 +49,3 @@ h6 {
     rgb(255 115 112) 100%
   );
 }
-
