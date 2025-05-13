@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface SponsorCardProps {
+  name: string;
   description: string;
   webUrl: string;
   socialsUrl: string;
@@ -12,9 +13,9 @@ interface SponsorCardProps {
   };
 }
 
-export default function SponsorCard({ description, webUrl, socialsUrl, sponsorImage }: SponsorCardProps) {
+export default function SponsorCard({ name, description, webUrl, socialsUrl, sponsorImage }: SponsorCardProps) {
   return (
-    <div className="relative group bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300">
+    <div className="relative group bg-white/10 backdrop-blur-sm rounded-3xl p-4 hover:bg-white/20 transition-all duration-300">
       <div className="aspect-[3/2] relative mb-4 rounded-lg overflow-hidden">
         <Image
           src={sponsorImage.url}
@@ -25,7 +26,9 @@ export default function SponsorCard({ description, webUrl, socialsUrl, sponsorIm
         />
       </div>
       
-      <h3 className="text-lg font-medium text-white mb-4">{description}</h3>
+      <h3 className="text-lg font-medium text-white mb-4">{name}</h3>
+    
+      <p className="text-sm text-white/80 mb-4">{description}</p>
       
       <div className="flex justify-center gap-4">
         <Link 

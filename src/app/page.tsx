@@ -4,6 +4,7 @@ import { AIRTABLE_PAT } from "@/lib/server/constants";
 import Airtable from "airtable";
 
 interface SponsorFields {
+  Name: string;
   Description: string;
   "Web URL": string;
   "Socials URL": string;
@@ -29,7 +30,7 @@ export default async function Home() {
     .all();
 
   return (
-    <div className="flex flex-col items-center min-h-screen py-12 px-4 overflow-y-auto">
+    <div className="flex flex-col items-center py-12 px-4 overflow-y-auto">
       <SolanaSpacesLogo className="max-w-full w-[600px] h-[200px] mb-12 px-5" />
       
       <div>
@@ -43,6 +44,7 @@ export default async function Home() {
           return (
             <SponsorCard
               key={sponsor.id}
+              name={fields.Name}
               description={fields.Description}
               webUrl={fields["Web URL"]}
               socialsUrl={fields["Socials URL"]}
