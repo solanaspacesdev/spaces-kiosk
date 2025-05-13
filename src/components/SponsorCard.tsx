@@ -16,7 +16,7 @@ interface SponsorCardProps {
   };
 }
 
-export default function SponsorCard({ name, description, webUrl, socialsUrl, sponsorImage }: SponsorCardProps) {
+export default function SponsorCard({ name, description, sponsorImage }: SponsorCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -40,8 +40,6 @@ export default function SponsorCard({ name, description, webUrl, socialsUrl, spo
         onClose={() => setIsDialogOpen(false)}
         name={name}
         description={description}
-        webUrl={webUrl}
-        socialsUrl={socialsUrl}
         sponsorImage={sponsorImage}
       />
     </>

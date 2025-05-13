@@ -1,13 +1,13 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import { QRCodeSVG } from "qrcode.react";
 
 interface SponsorDialogProps {
   isOpen: boolean;
   onClose: () => void;
   name: string;
   description: string;
-  webUrl: string;
-  socialsUrl: string;
   sponsorImage: {
     url: string;
     width: number;
@@ -20,11 +20,14 @@ export default function SponsorDialog({
   onClose, 
   name, 
   description, 
-  webUrl, 
-  socialsUrl, 
   sponsorImage 
 }: SponsorDialogProps) {
   if (!isOpen) return null;
+
+  // Create a URL for the sponsor's page
+  const sponsorPageUrl = `${window.location.origin}/sponsor/${encodeURIComponent(name)}`;
+
+  console.log('sponsorPageUrl',sponsorPageUrl);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -60,32 +63,19 @@ export default function SponsorDialog({
             <h2 className="text-3xl font-semibold text-white mb-4">{name}</h2>
             <p className="text-lg text-white/80 mb-8">{description}</p>
             
-            <div className="flex gap-6 mt-auto">
-              <Link 
-                href={webUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                  <polyline points="15 3 21 3 21 9"/>
-                  <line x1="10" y1="14" x2="21" y2="3"/>
-                </svg>
-                <span>Visit Website</span>
-              </Link>
-              
-              <Link 
-                href={socialsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
-                </svg>
-                <span>Follow on Twitter</span>
-              </Link>
+            <div className="mt-auto">
+              <div className="bg-white p-4 rounded-2xl inline-block">
+                <QRCodeSVG
+                  value={sponsorPageUrl}
+                  size={200}
+                  level="H"
+                  includeMargin={false}
+                  className="w-full h-full"
+                />
+              </div>
+              <p className="text-white/60 text-sm mt-4">
+                Scan with your phone to learn more
+              </p>
             </div>
           </div>
         </div>
