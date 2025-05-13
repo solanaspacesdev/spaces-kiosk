@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AIRTABLE_PAT } from "@/lib/server/constants";
-import Airtable from "airtable";
+import { airTableService } from "@/lib/server/services/AirTableService";
 
 interface SponsorFields {
   Description: string;
@@ -23,15 +23,7 @@ export default async function SponsorPage({
     throw new Error("Airtable API key is not configured");
   }
 
-  const airtable = new Airtable({ apiKey: AIRTABLE_PAT });
-  const base = airtable.base("appzAFYCLUpdr4InL");
-
-  const records = await base("sponsors")
-    .select({
-      filterByFormula: `{Name} = '${params.name}'`,
-    })
-    .all();
-
+  const records = await airTableService.getSponsor(params.name);
   if (records.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -61,9 +53,9 @@ export default async function SponsorPage({
             <div className="flex flex-col">
               <h1 className="text-4xl font-semibold text-white mb-4">{params.name}</h1>
               <p className="text-lg text-white/80 mb-8">{fields.Description}</p>
-              
+
               <div className="flex flex-col gap-4 mt-auto">
-                <Link 
+                <Link
                   href={fields["Web URL"]}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -76,8 +68,8 @@ export default async function SponsorPage({
                   </svg>
                   <span>Visit Website</span>
                 </Link>
-                
-                <Link 
+
+                <Link
                   href={fields["Socials URL"]}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -95,4 +87,4 @@ export default async function SponsorPage({
       </div>
     </div>
   );
-} 
+}
