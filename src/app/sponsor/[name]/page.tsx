@@ -17,13 +17,15 @@ interface SponsorFields {
 export default async function SponsorPage({
   params,
 }: {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }) {
   if (!AIRTABLE_PAT) {
     throw new Error('Airtable API key is not configured');
   }
 
-  const records = await airTableService.getSponsor(params.name);
+  const { name } = await params;
+
+  const records = await airTableService.getSponsor(name);
   if (records.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -43,7 +45,7 @@ export default async function SponsorPage({
             <div className="aspect-square relative rounded-2xl overflow-hidden">
               <Image
                 src={fields['Sponsor Image'][0].url}
-                alt={params.name}
+                alt={name}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -52,7 +54,7 @@ export default async function SponsorPage({
 
             <div className="flex flex-col">
               <h1 className="text-4xl font-semibold text-white mb-4">
-                {params.name}
+                {name}
               </h1>
               <p className="text-lg text-white/80 mb-8">{fields.Description}</p>
 
