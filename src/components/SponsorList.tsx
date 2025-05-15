@@ -3,16 +3,23 @@
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import SponsorCard from './SponsorCard';
-import { SponsorFields } from '@/types/SponsorFields';
+import { useGetSponsorsQuery } from '@/lib/store/sponsorsApi';
 
-interface SponsorListProps {
-  sponsors: Array<{
-    id: string;
-    fields: SponsorFields;
-  }>;
-}
+export default function SponsorList() {
+  const { data: sponsors, isLoading, error } = useGetSponsorsQuery();
 
-export default function SponsorList({ sponsors }: SponsorListProps) {
+  if (isLoading) {
+    return <div className="text-center text-white">Loading sponsors...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-white">Error loading sponsors</div>;
+  }
+
+  if (!sponsors?.length) {
+    return <div className="text-center text-white">No sponsors found</div>;
+  }
+
   return (
     <SimpleBar className="w-full max-w-7xl h-[calc(100vh-400px)]" autoHide={true}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 w-full px-4">
