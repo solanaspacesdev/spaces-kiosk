@@ -36,7 +36,7 @@ export default function SponsorDialog({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl bg-white/10 backdrop-blur-md rounded-3xl p-8">
+      <div className="relative w-full max-w-4xl bg-white/20 backdrop-blur-md rounded-3xl p-8">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
@@ -59,12 +59,12 @@ export default function SponsorDialog({
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="aspect-square relative rounded-2xl overflow-hidden">
+          <div className="aspect-square relative rounded-2xl overflow-hidden pr-4">
             <Image
               src={sponsorImage.url}
               alt={name}
               fill
-              className="object-cover"
+              className="object-contain"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
