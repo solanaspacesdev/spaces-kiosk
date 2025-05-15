@@ -30,12 +30,13 @@ export default function SponsorCard({
         className="group w-full h-full"
       >
        <div className="rounded-2xl relative aspect-[3/2] overflow-hidden hover:scale-105 transition-transform duration-300">
-       <div className="absolute inset-8 z-20 rh-60 object-cover rounded-2xl overflow-hidden">
+       <div className="absolute inset-8 flex flex-col items-center justify-center z-20 object-contain">
           <Image
             src={sponsorImage.url}
             alt={name}
-            fill
-            className="m-auto w-full h-full object-contain rounded-2xl"
+            width={sponsorImage.width}
+            height={sponsorImage.height}
+            className="rounded-2xl max-w-2/3"
             quality={100}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />

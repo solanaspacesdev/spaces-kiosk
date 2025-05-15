@@ -1,5 +1,5 @@
 import SolanaSpacesLogo from '@/components/SolanaSpacesLogo';
-import SponsorCard from '@/components/SponsorCard';
+import SponsorList from '@/components/SponsorList';
 import { airTableService } from '@/lib/server/services/AirTableService';
 import { SponsorFields } from '@/types/SponsorFields';
 
@@ -21,6 +21,10 @@ export default async function Home({
   }
 
   const sponsors = await airTableService.getSponsors();
+  const typedSponsors = sponsors.map(sponsor => ({
+    id: sponsor.id,
+    fields: sponsor.fields as unknown as SponsorFields
+  }));
 
   return (
     <div className="flex flex-col items-center h-screen py-12 px-4">
@@ -29,24 +33,7 @@ export default async function Home({
       <div>
         {sponsors.length > 0 && <h2 className="text-center mb-14">Sponsors</h2>}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 w-full max-w-7xl h-[calc(100vh-400px)] overflow-y-auto px-4">
-        {sponsors.map((sponsor) => {
-          const fields = sponsor.fields as unknown as SponsorFields;
-          if (!fields['Sponsor Image']?.[0]) return null;
-
-          return (
-            <div key={sponsor.id} className="w-full h-[300px]">
-              <SponsorCard
-                name={fields.Name}
-                description={fields.Description}
-                webUrl={fields['Web URL']}
-                socialsUrl={fields['Socials URL']}
-                sponsorImage={fields['Sponsor Image'][0]}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <SponsorList sponsors={typedSponsors} />
     </div>
   );
 }

@@ -32,7 +32,7 @@ export default function SponsorDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -58,34 +58,37 @@ export default function SponsorDialog({
           </svg>
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="aspect-square relative rounded-2xl overflow-hidden pr-4">
+        <div className="flex flex-col items-center justify-center gap-8 w-full">
+          <div className="flex items-center justify-center">
             <Image
               src={sponsorImage.url}
               alt={name}
-              fill
-              className="object-contain"
+              width={sponsorImage.width}
+              height={sponsorImage.height}
+              className="object-contain max-w-2/3 rounded-2xl"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
 
-          <div className="flex flex-col">
-            <h2 className="text-3xl font-semibold text-white mb-4">{name}</h2>
-            <p className="text-lg text-white/80 mb-8">{description}</p>
-
-            <div className="mt-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="col-span-2">
+              <h2 className="text-3xl font-semibold text-white mb-4">{name}</h2>
+              <p className="text-lg text-white/80 mb-8">{description}</p>
+            </div>
+            <div className="col-span-1 flex items-center justify-center">
+              <div>
               <div className="bg-white p-4 rounded-2xl inline-block">
                 <QRCodeSVG
                   value={sponsorPageUrl}
-                  size={200}
+                  size={300}
                   level="H"
-                  includeMargin={false}
                   className="w-full h-full"
                 />
               </div>
-              <p className="text-white/60 text-sm mt-4">
+              <p className="text-white/60 text-sm text-center mt-4">
                 Scan with your phone to learn more
               </p>
+              </div>
             </div>
           </div>
         </div>
