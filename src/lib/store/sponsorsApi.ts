@@ -25,7 +25,6 @@ export const api = createApi({
   endpoints: (builder) => ({
     getSponsors: builder.query<Sponsor[], void>({
       query: () => 'sponsors',
-      pollingInterval: 30000, // 30 seconds
     }),
     getCompanyInfo: builder.query<CompanyInfo[], void>({
       query: () => 'company',

@@ -32,27 +32,26 @@ export default function RefreshCountdown({
   size = 'md'
 }: RefreshCountdownProps) {
   const [timeLeft, setTimeLeft] = useState(interval);
-  const lastUpdateTime = useRef(Date.now());
-  const animationFrameId = useRef<number>();
+  const animationFrameId = useRef<number | undefined>(undefined);
+  const startTime = useRef(Date.now());
 
   useEffect(() => {
     const updateTime = () => {
       const now = Date.now();
-      const delta = now - lastUpdateTime.current;
-      lastUpdateTime.current = now;
+      const elapsed = now - startTime.current;
+      const remaining = Math.max(0, interval - elapsed);
 
-      setTimeLeft((prev) => {
-        const newTime = prev - delta;
-        if (newTime <= 0) {
-          setTimeout(onRefresh, 0);
-          return interval;
-        }
-        return newTime;
-      });
+      setTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        startTime.current = now;
+        onRefresh();
+      }
 
       animationFrameId.current = requestAnimationFrame(updateTime);
     };
 
+    startTime.current = Date.now();
     animationFrameId.current = requestAnimationFrame(updateTime);
 
     return () => {
