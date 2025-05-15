@@ -35,8 +35,7 @@ const delight = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Welcome toSolana Spaces',
-  description: '',
+  title: 'Solana Spaces',
 };
 
 export default function RootLayout({
