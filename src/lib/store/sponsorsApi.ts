@@ -6,15 +6,31 @@ interface Sponsor {
   fields: SponsorFields;
 }
 
-export const sponsorsApi = createApi({
-  reducerPath: 'sponsorsApi',
+interface CompanyInfo {
+  id: string;
+  fields: {
+    Name: string;
+    'Company Description': string;
+    'Company Photo': Array<{
+      url: string;
+      width: number;
+      height: number;
+    }>;
+  };
+}
+
+export const api = createApi({
+  reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
   endpoints: (builder) => ({
     getSponsors: builder.query<Sponsor[], void>({
       query: () => 'sponsors',
       pollingInterval: 30000, // 30 seconds
     }),
+    getCompanyInfo: builder.query<CompanyInfo[], void>({
+      query: () => 'company',
+    }),
   }),
 });
 
-export const { useGetSponsorsQuery } = sponsorsApi;
+export const { useGetSponsorsQuery, useGetCompanyInfoQuery } = api;

@@ -22,6 +22,12 @@ class AirTableService {
       .all();
     return records;
   }
+
+  async getCompanyInfo() {
+    const base = this._airtable.base(this._base);
+    const records = await base('company').select({}).all();
+    return records;
+  }
 }
 
 export const airTableService = new AirTableService();
