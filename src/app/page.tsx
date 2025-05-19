@@ -1,6 +1,5 @@
 import SolanaSpacesLogo from '@/components/SolanaSpacesLogo';
-import SponsorList from '@/components/SponsorList';
-import CompanyInfo from '@/components/CompanyInfo';
+import HomeView from '@/components/views/Home';
 
 export default async function Home({
   searchParams,
@@ -13,23 +12,13 @@ export default async function Home({
 
   if (!isKiosk) {
     return (
-      <div className="flex flex-col items-center py-12 px-4 overflow-y-auto">
+      <div className="flex flex-col items-center py-12 px-4">
         <SolanaSpacesLogo className="max-w-full w-[600px] h-[200px] mb-12 px-5" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen py-12 px-4">
-      <div className="flex flex-col items-center mb-12">
-        <SolanaSpacesLogo className="max-w-full w-[600px] h-[200px] mb-8 px-5" />
-        <CompanyInfo />
-      </div>
-
-      <div>
-        <h2 className="text-center mb-14">Sponsors</h2>
-      </div>
-      <SponsorList />
-    </div>
+    <HomeView />
   );
 }

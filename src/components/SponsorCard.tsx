@@ -27,9 +27,9 @@ export default function SponsorCard({
     <>
       <button
         onClick={() => setIsDialogOpen(true)}
-        className="group w-full h-full"
+        className="group w-full h-full "
       >
-       <div className="rounded-2xl relative aspect-[3/2] overflow-hidden hover:scale-105 transition-transform duration-300">
+       <div className="rounded-2xl relative aspect-[3/2] overflow-hidden bg-gradient-to-t from-white/60 to-transparent">
        <div className="absolute inset-8 flex flex-col items-center justify-center z-20 object-contain">
           <Image
             src={sponsorImage.url}
@@ -41,9 +41,8 @@ export default function SponsorCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent z-10" />
        </div>
-       <h3 className="font-semibold text-white p-4 text-center">
+       <h3 className="font-semibold text-white p-4 text-center min-h-[70px]">
           {name}
         </h3>
       </button>
