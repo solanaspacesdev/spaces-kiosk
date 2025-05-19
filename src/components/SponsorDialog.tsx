@@ -36,10 +36,10 @@ export default function SponsorDialog({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl bg-white/20 backdrop-blur-md rounded-3xl p-8">
+      <div className="relative w-full max-w-4xl backdrop-blur-md rounded-3xl p-8">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+          className="absolute top-8 right-8 text-white/80 hover:text-white transition-colors"
           aria-label="Close dialog"
         >
           <svg
@@ -59,36 +59,39 @@ export default function SponsorDialog({
         </button>
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
-          <div className="flex items-center justify-center">
-            <Image
-              src={sponsorImage.url}
-              alt={name}
-              width={sponsorImage.width}
-              height={sponsorImage.height}
-              className="object-contain max-w-2/3 rounded-2xl"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+          <div className="grid grid-cols-2 items-center justify-center gap-4 w-full">
+            <div className='mb-4'>
+              <Image
+                src={sponsorImage.url}
+                alt={name}
+                width={sponsorImage.width}
+                height={sponsorImage.height}
+                className="object-contain max-w-2/3 rounded-2xl"
+                sizes="(max-width: 768px) 100vw, (min-width: 300px) 50vw"
+              />
+            </div>
+            <div className="col-span-2 max-h-[300px] overflow-y-auto">
+                <h1 className="text-3xl font-semibold text-white mb-4">{name}</h1>
+                <p className="text-lg text-white/80 mb-8">{description}</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="col-span-2">
-              <h2 className="text-3xl font-semibold text-white mb-4">{name}</h2>
-              <p className="text-lg text-white/80 mb-8">{description}</p>
-            </div>
+
             <div className="col-span-1 flex items-center justify-center">
-              <div>
+
               <div className="bg-white p-4 rounded-2xl inline-block">
                 <QRCodeSVG
                   value={sponsorPageUrl}
-                  size={300}
+                  size={150}
                   level="H"
                   className="w-full h-full"
                 />
               </div>
-              <p className="text-white/60 text-sm text-center mt-4">
+              <p className="text-white/60 text-sm text-center mt-4 px-6">
                 Scan with your phone to learn more
               </p>
-              </div>
+
             </div>
           </div>
         </div>
