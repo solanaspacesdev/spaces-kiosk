@@ -49,7 +49,7 @@ export default function RootLayout({
         <Providers>
           <div className="relative z-10 w-full">
             {children}
-            <footer className="text-center text-sm text-white/80">
+            <footer className="text-center text-sm text-white/80 pt-6 py-8">
               <p>
                 <a
                   href="https://solanaspaces.xyz"

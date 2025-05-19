@@ -6,6 +6,7 @@ import { QRCodeSVG } from 'qrcode.react';
 interface SponsorDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  id: string;
   name: string;
   description: string;
   sponsorImage: {
@@ -18,14 +19,15 @@ interface SponsorDialogProps {
 export default function SponsorDialog({
   isOpen,
   onClose,
+  id,
   name,
   description,
   sponsorImage,
 }: SponsorDialogProps) {
   if (!isOpen) return null;
 
-  // Create a URL for the sponsor's page
-  const sponsorPageUrl = `${window.location.origin}/sponsor/${encodeURIComponent(name)}`;
+  // Create a URL for the sponsor's page by id
+  const sponsorPageUrl = `${window.location.origin}/sponsor/${encodeURIComponent(id)}`;
 
   console.log('sponsorPageUrl', sponsorPageUrl);
 

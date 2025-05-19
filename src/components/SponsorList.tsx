@@ -32,6 +32,7 @@ export default function SponsorList() {
             return (
               <div key={sponsor.id} className="w-full">
                 <SponsorCard
+                  id={sponsor.id}
                   name={fields.Name}
                   description={fields.Description}
                   webUrl={fields['Web URL']}

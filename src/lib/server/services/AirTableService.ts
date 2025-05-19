@@ -13,6 +13,12 @@ class AirTableService {
     return records;
   }
 
+  async getSponsorById(id: string) {
+    const base = this._airtable.base(this._base);
+    const record = await base('sponsors').find(id);
+    return record;
+  }
+
   async getSponsor(name: string) {
     const base = this._airtable.base(this._base);
     const records = await base('sponsors')

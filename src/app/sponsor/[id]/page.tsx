@@ -12,21 +12,22 @@ interface SponsorFields {
     width: number;
     height: number;
   }>;
+  Name: string;
 }
 
 export default async function SponsorPage({
   params,
 }: {
-  params: Promise<{ name: string }>;
+  params: Promise<{ id: string }>;
 }) {
   if (!AIRTABLE_PAT) {
     throw new Error('Airtable API key is not configured');
   }
 
-  const { name } = await params;
+  const { id } = await params;
 
-  const records = await airTableService.getSponsor(name);
-  if (records.length === 0) {
+  const record = await airTableService.getSponsorById(id);
+  if (!record) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <h1 className="text-2xl text-white">Sponsor not found</h1>
@@ -34,8 +35,8 @@ export default async function SponsorPage({
     );
   }
 
-  const sponsor = records[0];
-  const fields = sponsor.fields as unknown as SponsorFields;
+  const fields = record.fields as unknown as SponsorFields;
+  const name = fields.Name;
 
   return (
     <div className="min-h-screen">

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import SponsorDialog from './SponsorDialog';
 
 interface SponsorCardProps {
+  id: string;
   name: string;
   description: string;
   webUrl: string;
@@ -17,6 +18,7 @@ interface SponsorCardProps {
 }
 
 export default function SponsorCard({
+  id,
   name,
   description,
   sponsorImage,
@@ -50,6 +52,7 @@ export default function SponsorCard({
       <SponsorDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
+        id={id}
         name={name}
         description={description}
         sponsorImage={sponsorImage}
