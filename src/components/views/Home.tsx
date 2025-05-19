@@ -15,7 +15,7 @@ export default function HomeView() {
       </div>
 
       <div>
-        <h1 className="text-center mb-6">Sponsors</h1>
+        <h1 className="text-center mb-6">Partners</h1>
       </div>
       <SponsorList />
     </div>
