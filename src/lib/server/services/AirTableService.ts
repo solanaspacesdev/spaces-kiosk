@@ -9,7 +9,11 @@ class AirTableService {
 
   async getSponsors() {
     const base = this._airtable.base(this._base);
-    const records = await base('sponsors').select({}).all();
+    const records = await base('sponsors')
+      .select({
+        sort: [{ field: 'Rank', direction: 'asc' }],
+      })
+      .all();
     return records;
   }
 
