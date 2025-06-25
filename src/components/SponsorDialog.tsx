@@ -34,7 +34,7 @@ export default function SponsorDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -62,7 +62,7 @@ export default function SponsorDialog({
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
           <div className="grid grid-cols-2 items-center justify-center gap-4 w-full">
-            <div className='mb-4'>
+            <div className="mb-4">
               <Image
                 src={sponsorImage.url}
                 alt={name}
@@ -73,15 +73,13 @@ export default function SponsorDialog({
               />
             </div>
             <div className="col-span-2 max-h-[300px] overflow-y-auto">
-                <h1 className="text-3xl font-semibold text-white mb-4">{name}</h1>
-                <p className="text-lg text-white/80 mb-8">{description}</p>
+              <h1 className="text-3xl font-semibold text-white mb-4">{name}</h1>
+              <p className="text-lg text-white/80 mb-8">{description}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
             <div className="col-span-1 flex items-center justify-center">
-
               <div className="bg-white p-4 rounded-2xl inline-block">
                 <QRCodeSVG
                   value={sponsorPageUrl}
@@ -93,7 +91,6 @@ export default function SponsorDialog({
               <p className="text-white/60 text-sm text-center mt-4 px-6">
                 Scan with your phone to learn more
               </p>
-
             </div>
           </div>
         </div>
