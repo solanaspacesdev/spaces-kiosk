@@ -2,10 +2,9 @@
 
 import SponsorCard from './SponsorCard';
 import { useGetSponsorsQuery } from '@/lib/store/sponsorsApi';
-import RefreshCountdown from './RefreshCountdown';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import PointerIcon from './icons/PointerIcon';
 
-const REFRESH_INTERVAL = 30000; // 30 seconds
 const DIALOG_INTERVAL = 60000; // 60 seconds
 const RESET_INTERVAL = 300000; // 5 minutes
 
@@ -55,7 +54,9 @@ export default function SponsorList() {
     }, 1000);
 
     // Dialog open timer
-    timerRef.current = setTimeout(() => {
+    timerRef.current = setTimeout(async () => {
+      console.log('refetching');
+      await refetch();
       console.log(
         '[SponsorList] Timer elapsed (60s), opening dialog automatically.'
       );
@@ -66,6 +67,7 @@ export default function SponsorList() {
       if (timerRef.current) clearTimeout(timerRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSponsorId, sponsors, pickRandomSponsor]);
 
   // Reset timer to 5 minutes on interaction
@@ -117,12 +119,17 @@ export default function SponsorList() {
   return (
     <>
       <div className="grid grid-cols-2 gap-x-8 w-full px-4">
-        {sponsors.map((sponsor) => {
+        {sponsors.map((sponsor, i) => {
           const fields = sponsor.fields;
           if (!fields['Sponsor Image']?.[0]) return null;
 
           return (
-            <div key={sponsor.id} className="w-full">
+            <div key={sponsor.id} className="w-full relative">
+              {i === 0 && selectedSponsorId == null && (
+                <span className="absolute bottom-0 right-0 text-white text-sm inline-block -rotate-45 fade-in-up-right">
+                  <PointerIcon />
+                </span>
+              )}
               <SponsorCard
                 id={sponsor.id}
                 name={fields.Name}
@@ -130,7 +137,7 @@ export default function SponsorList() {
                 webUrl={fields['Web URL']}
                 socialsUrl={fields['Socials URL']}
                 sponsorImage={fields['Sponsor Image'][0]}
-                onSelect={(id) => {
+                onSelect={async (id) => {
                   setSelectedSponsorId(id);
                   resetTimer();
                 }}
@@ -144,12 +151,6 @@ export default function SponsorList() {
           );
         })}
       </div>
-
-      <RefreshCountdown
-        interval={REFRESH_INTERVAL}
-        onRefresh={refetch}
-        size="lg"
-      />
     </>
   );
 }

@@ -72,3 +72,26 @@ h6 {
 .simplebar-track.simplebar-vertical .simplebar-scrollbar {
   width: 8px;
 }
+
+@keyframes fadeInUpRight {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) translateX(40px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) translateX(-40px);
+  }
+}
+
+.fade-in-up-right {
+  animation: fadeInUpRight 3s ease-in-out infinite;
+}

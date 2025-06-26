@@ -38,7 +38,7 @@ export default function SponsorCard({
   return (
     <>
       <button onClick={handleSelect} className="group w-full h-full ">
-        <div className="rounded-2xl relative aspect-[3/2] overflow-hidden bg-gradient-to-t from-white/60 to-transparent">
+        <div className="rounded-2xl relative aspect-[3/2] overflow-hidden">
           <div className="absolute inset-8 flex flex-col items-center justify-center z-20 object-contain">
             <Image
               src={sponsorImage.url}
