@@ -48,7 +48,9 @@ export default function RootLayout({
       <body className={`${delight.variable}`}>
         <Providers>
           <div className="relative z-10 w-full">
+            <div className='flex flex-col items-center justify-center'>
             {children}
+            </div>
             <footer className="text-center text-sm text-white/80 pt-6 py-8">
               <p>
                 <a

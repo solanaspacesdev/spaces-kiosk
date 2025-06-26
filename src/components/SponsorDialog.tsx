@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
+import { useEffect, useState } from 'react';
 
 interface SponsorDialogProps {
   isOpen: boolean;
@@ -14,6 +15,9 @@ interface SponsorDialogProps {
     width: number;
     height: number;
   };
+  countdown?: number;
+  onDialogInteract?: () => void;
+  initialCountdown?: number;
 }
 
 export default function SponsorDialog({
@@ -23,22 +27,54 @@ export default function SponsorDialog({
   name,
   description,
   sponsorImage,
+  countdown,
+  onDialogInteract,
+  initialCountdown = 60000,
 }: SponsorDialogProps) {
-  if (!isOpen) return null;
+  const [visible, setVisible] = useState(isOpen);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setTimeout(() => setVisible(true), 10); // allow for mount
+    } else if (visible) {
+      setVisible(false);
+      const timeout = setTimeout(() => setShouldRender(false), 2000);
+      return () => clearTimeout(timeout);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  if (!shouldRender) return null;
 
   // Create a URL for the sponsor's page by id
   const sponsorPageUrl = `${window.location.origin}/sponsor/${encodeURIComponent(id)}`;
 
-  console.log('sponsorPageUrl', sponsorPageUrl);
+  // Calculate countdown bar width (0-100%)
+  const countdownPercent =
+    countdown !== undefined && initialCountdown
+      ? Math.max(0, Math.min(100, (countdown / initialCountdown) * 100))
+      : 0;
+
+  const handleDialogClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDialogInteract) onDialogInteract();
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}
+    >
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl backdrop-blur-md rounded-3xl p-8">
+      <div
+        className="relative w-full max-w-4xl backdrop-blur-md rounded-3xl p-8"
+        onClick={handleDialogClick}
+      >
         <button
           onClick={onClose}
           className="absolute top-8 right-8 text-white/80 hover:text-white transition-colors"
@@ -62,7 +98,7 @@ export default function SponsorDialog({
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
           <div className="grid grid-cols-2 items-center justify-center gap-4 w-full">
-            <div className='mb-4'>
+            <div className="mb-4">
               <Image
                 src={sponsorImage.url}
                 alt={name}
@@ -73,15 +109,13 @@ export default function SponsorDialog({
               />
             </div>
             <div className="col-span-2 max-h-[300px] overflow-y-auto">
-                <h1 className="text-3xl font-semibold text-white mb-4">{name}</h1>
-                <p className="text-lg text-white/80 mb-8">{description}</p>
+              <h1 className="text-3xl font-semibold text-white mb-4">{name}</h1>
+              <p className="text-lg text-white/80 mb-8">{description}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
             <div className="col-span-1 flex items-center justify-center">
-
               <div className="bg-white p-4 rounded-2xl inline-block">
                 <QRCodeSVG
                   value={sponsorPageUrl}
@@ -93,10 +127,18 @@ export default function SponsorDialog({
               <p className="text-white/60 text-sm text-center mt-4 px-6">
                 Scan with your phone to learn more
               </p>
-
             </div>
           </div>
         </div>
+        {/* Countdown bar at the bottom */}
+        {countdown !== undefined && (
+          <div className="absolute left-0 bottom-0 w-full h-2 bg-white/20 rounded-b-3xl overflow-hidden">
+            <div
+              className="h-full bg-white transition-all duration-1000"
+              style={{ width: `${countdownPercent}%` }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
