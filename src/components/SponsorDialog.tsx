@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
+import { useEffect, useState } from 'react';
 
 interface SponsorDialogProps {
   isOpen: boolean;
@@ -30,7 +31,22 @@ export default function SponsorDialog({
   onDialogInteract,
   initialCountdown = 60000,
 }: SponsorDialogProps) {
-  if (!isOpen) return null;
+  const [visible, setVisible] = useState(isOpen);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setTimeout(() => setVisible(true), 10); // allow for mount
+    } else if (visible) {
+      setVisible(false);
+      const timeout = setTimeout(() => setShouldRender(false), 2000);
+      return () => clearTimeout(timeout);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  if (!shouldRender) return null;
 
   // Create a URL for the sponsor's page by id
   const sponsorPageUrl = `${window.location.origin}/sponsor/${encodeURIComponent(id)}`;
@@ -47,7 +63,9 @@ export default function SponsorDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}
+    >
       <div
         className="fixed inset-0 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
