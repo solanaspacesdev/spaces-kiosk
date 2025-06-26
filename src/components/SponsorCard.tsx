@@ -18,6 +18,7 @@ interface SponsorCardProps {
   isSelected: boolean;
   countdown?: number;
   onDialogInteract?: () => void;
+  initialCountdown?: number;
 }
 
 export default function SponsorCard({
@@ -29,6 +30,7 @@ export default function SponsorCard({
   isSelected,
   countdown,
   onDialogInteract,
+  initialCountdown,
 }: SponsorCardProps) {
   const handleSelect = () => {
     onSelect(id);
@@ -68,6 +70,7 @@ export default function SponsorCard({
         sponsorImage={sponsorImage}
         countdown={countdown}
         onDialogInteract={onDialogInteract}
+        initialCountdown={initialCountdown}
       />
     </>
   );

@@ -16,6 +16,7 @@ interface SponsorDialogProps {
   };
   countdown?: number;
   onDialogInteract?: () => void;
+  initialCountdown?: number;
 }
 
 export default function SponsorDialog({
@@ -27,6 +28,7 @@ export default function SponsorDialog({
   sponsorImage,
   countdown,
   onDialogInteract,
+  initialCountdown = 60000,
 }: SponsorDialogProps) {
   if (!isOpen) return null;
 
@@ -35,8 +37,8 @@ export default function SponsorDialog({
 
   // Calculate countdown bar width (0-100%)
   const countdownPercent =
-    countdown !== undefined
-      ? Math.max(0, Math.min(100, (countdown / 60000) * 100))
+    countdown !== undefined && initialCountdown
+      ? Math.max(0, Math.min(100, (countdown / initialCountdown) * 100))
       : 0;
 
   const handleDialogClick = (e: React.MouseEvent) => {
