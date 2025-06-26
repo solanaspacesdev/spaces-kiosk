@@ -14,6 +14,8 @@ interface SponsorDialogProps {
     width: number;
     height: number;
   };
+  countdown?: number;
+  onDialogInteract?: () => void;
 }
 
 export default function SponsorDialog({
@@ -23,13 +25,24 @@ export default function SponsorDialog({
   name,
   description,
   sponsorImage,
+  countdown,
+  onDialogInteract,
 }: SponsorDialogProps) {
   if (!isOpen) return null;
 
   // Create a URL for the sponsor's page by id
   const sponsorPageUrl = `${window.location.origin}/sponsor/${encodeURIComponent(id)}`;
 
-  console.log('sponsorPageUrl', sponsorPageUrl);
+  // Calculate countdown bar width (0-100%)
+  const countdownPercent =
+    countdown !== undefined
+      ? Math.max(0, Math.min(100, (countdown / 60000) * 100))
+      : 0;
+
+  const handleDialogClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDialogInteract) onDialogInteract();
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -38,7 +51,10 @@ export default function SponsorDialog({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl backdrop-blur-md rounded-3xl p-8">
+      <div
+        className="relative w-full max-w-4xl backdrop-blur-md rounded-3xl p-8"
+        onClick={handleDialogClick}
+      >
         <button
           onClick={onClose}
           className="absolute top-8 right-8 text-white/80 hover:text-white transition-colors"
@@ -94,6 +110,15 @@ export default function SponsorDialog({
             </div>
           </div>
         </div>
+        {/* Countdown bar at the bottom */}
+        {countdown !== undefined && (
+          <div className="absolute left-0 bottom-0 w-full h-2 bg-white/20 rounded-b-3xl overflow-hidden">
+            <div
+              className="h-full bg-white transition-all duration-1000"
+              style={{ width: `${countdownPercent}%` }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
