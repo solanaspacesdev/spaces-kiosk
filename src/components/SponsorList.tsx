@@ -12,6 +12,9 @@ const ACTIVITY_INTERVAL = 30000;
 
 export default function SponsorList() {
   const { data: sponsors, isLoading, error } = useGetSponsorsQuery();
+  const [mode, setMode] = useState<
+    'activity' | 'dialog' | 'pendingAutoAdvance'
+  >('activity');
   const [selectedSponsorId, setSelectedSponsorId] = useState<string | null>(
     null
   );
@@ -20,23 +23,24 @@ export default function SponsorList() {
   const [countdown, setCountdown] = useState<number>(ACTIVITY_INTERVAL);
   const [initialCountdown, setInitialCountdown] =
     useState<number>(ACTIVITY_INTERVAL);
+  const [lastSponsorId, setLastSponsorId] = useState<string | null>(null);
   const selectedSponsorIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     selectedSponsorIdRef.current = selectedSponsorId;
   }, [selectedSponsorId]);
 
-  // Helper to pick a random sponsor (not the current one)
+  // Helper to pick a random sponsor (not the last shown one)
   const pickRandomSponsor = useCallback(() => {
     if (!sponsors || sponsors.length === 0) return null;
     let available = sponsors;
-    const currentId = selectedSponsorIdRef.current;
-    if (currentId && sponsors.length > 1) {
-      available = sponsors.filter((s) => s.id !== currentId);
+    if (lastSponsorId && sponsors.length > 1) {
+      available = sponsors.filter((s) => s.id !== lastSponsorId);
     }
+    if (available.length === 0) return null;
     const random = available[Math.floor(Math.random() * available.length)];
     return random.id;
-  }, [sponsors]);
+  }, [sponsors, lastSponsorId]);
 
   // Main timer/logic interval
   useEffect(() => {
@@ -53,12 +57,12 @@ export default function SponsorList() {
     };
   }, [sponsors]);
 
-  // Handle transitions when countdown reaches 0
+  // State machine for timer transitions
   useEffect(() => {
     if (!sponsors || sponsors.length === 0) return;
     if (countdown > 0) return;
 
-    if (!selectedSponsorId) {
+    if (mode === 'activity') {
       // Activity timer expired, open random dialog (auto mode)
       const nextId = pickRandomSponsor();
       if (nextId) {
@@ -67,25 +71,57 @@ export default function SponsorList() {
         setDialogInteracted(false);
         setCountdown(DIALOG_INTERVAL);
         setInitialCountdown(DIALOG_INTERVAL);
+        setMode('dialog');
         console.log(
           '[SponsorList] No user activity, opening dialog automatically:',
           nextId
+        );
+      } else {
+        // No sponsor to show, restart activity timer
+        setCountdown(ACTIVITY_INTERVAL);
+        setInitialCountdown(ACTIVITY_INTERVAL);
+        setMode('activity');
+        console.log(
+          '[SponsorList] No sponsor available, restarting activity timer.'
         );
       }
       return;
     }
 
-    // Dialog timer expired
-    if (dialogMode === 'user' || (dialogMode === 'auto' && dialogInteracted)) {
-      // Close dialog, start activity timer
-      setSelectedSponsorId(null);
-      setDialogMode(null);
-      setDialogInteracted(false);
-      setCountdown(ACTIVITY_INTERVAL);
-      setInitialCountdown(ACTIVITY_INTERVAL);
-      console.log('[SponsorList] Dialog auto-closed, resuming activity timer.');
-    } else if (dialogMode === 'auto' && !dialogInteracted) {
-      // Auto-advance to next dialog
+    if (mode === 'dialog') {
+      if (
+        dialogMode === 'user' ||
+        (dialogMode === 'auto' && dialogInteracted)
+      ) {
+        // Close dialog, start activity timer
+        setLastSponsorId(selectedSponsorId);
+        setSelectedSponsorId(null);
+        setDialogMode(null);
+        setDialogInteracted(false);
+        setCountdown(ACTIVITY_INTERVAL);
+        setInitialCountdown(ACTIVITY_INTERVAL);
+        setMode('activity');
+        console.log(
+          '[SponsorList] Dialog auto-closed, resuming activity timer.'
+        );
+      } else if (dialogMode === 'auto' && !dialogInteracted) {
+        // Auto-advance to next dialog, but wait for fade-out
+        setLastSponsorId(selectedSponsorId);
+        setSelectedSponsorId(null);
+        setDialogMode(null);
+        setDialogInteracted(false);
+        setCountdown(ACTIVITY_INTERVAL); // temporary, will be replaced
+        setInitialCountdown(ACTIVITY_INTERVAL);
+        setMode('pendingAutoAdvance');
+        console.log(
+          '[SponsorList] Dialog auto-advancing, will open next after fade-out.'
+        );
+      }
+      return;
+    }
+
+    if (mode === 'pendingAutoAdvance') {
+      // After fade-out, open next dialog or fall back to activity
       const nextId = pickRandomSponsor();
       if (nextId) {
         setSelectedSponsorId(nextId);
@@ -93,11 +129,24 @@ export default function SponsorList() {
         setDialogInteracted(false);
         setCountdown(DIALOG_INTERVAL);
         setInitialCountdown(DIALOG_INTERVAL);
-        console.log('[SponsorList] Auto-advancing to next dialog:', nextId);
+        setMode('dialog');
+        console.log(
+          '[SponsorList] Auto-advance: opening next dialog after fade-out:',
+          nextId
+        );
+      } else {
+        setCountdown(ACTIVITY_INTERVAL);
+        setInitialCountdown(ACTIVITY_INTERVAL);
+        setMode('activity');
+        console.log(
+          '[SponsorList] No available sponsor to auto-advance, resuming activity timer.'
+        );
       }
+      return;
     }
   }, [
     countdown,
+    mode,
     dialogMode,
     dialogInteracted,
     selectedSponsorId,
@@ -111,6 +160,7 @@ export default function SponsorList() {
       if (!selectedSponsorId) {
         setCountdown(ACTIVITY_INTERVAL);
         setInitialCountdown(ACTIVITY_INTERVAL);
+        setMode('activity');
         console.log('[SponsorList] Activity timer reset on scroll.');
       }
     };
@@ -126,13 +176,16 @@ export default function SponsorList() {
       setDialogInteracted(false);
       setCountdown(DIALOG_INTERVAL);
       setInitialCountdown(DIALOG_INTERVAL);
+      setMode('dialog');
       console.log('[SponsorList] User opened dialog:', id);
     } else {
+      setLastSponsorId(selectedSponsorId);
       setSelectedSponsorId(null);
       setDialogMode(null);
       setDialogInteracted(false);
       setCountdown(ACTIVITY_INTERVAL);
       setInitialCountdown(ACTIVITY_INTERVAL);
+      setMode('activity');
       console.log('[SponsorList] Dialog closed by user.');
     }
   };
